@@ -34,24 +34,27 @@
 </head>
 <body>
   <div contenteditable="true">
-    <p>Lorem <del>ipsum <strong>d<em>o</em>lor</strong></del> <em>sit</em> amet.</p>
-    <p>And <strong>blah <em>or</em></strong> nah.</p>
-    <img src="img.svg" alt="Some JavaScript logo" width="20px">
-    <ul>
-      <li>Item 1</li>
-      <li>Second item</li>
-      <li>List in list
-        <ul>
-          <li>Third li</li>
-          <li>Fourth Item</li>
-        </ul>
-      </li>
-    </ul>
+    <div>
+      <p>Lorem <del>ipsum <strong>d<em>o</em>lor</strong></del> <em>sit</em> amet.</p>
+      <p>And <strong>blah <em>or</em></strong> nah.</p>
+      <img src="img.svg" alt="Some JavaScript logo" width="20px">
+      <ul>
+        <li>Item 1</li>
+        <li>Second item</li>
+        <li>List in list
+          <ul>
+            <li>Third li</li>
+            <li>Fourth Item</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
   </div>
   <div id="result"></div>
 
   <script>
     const contenteditable = document.querySelector('[contenteditable]')
+    contenteditable.innerHTML = contenteditable.innerHTML.replace(/>\s{2,}</g, '><')
     const showContentEditableHtml = () => {
       document.getElementById('result').innerHTML = contenteditable.innerHTML.replace(/&/g, "&amp;")
          .replace(/</g, "&lt;")
@@ -62,13 +65,23 @@
     contenteditable.addEventListener('input', showContentEditableHtml)
     showContentEditableHtml()
 
+    const SELECTABLE_TAGS = ['IMG']
+
+    function isOrphanSelectableNode(el) {
+      return SELECTABLE_TAGS.indexOf(el.tagName.toUpperCase()) !== -1
+    }
+
     function getTextNodes(el) {
-      if (el.nodeType === 3) {
+      if (el.nodeType === Node.TEXT_NODE) {
         return [el]
       }
 
+      if (isOrphanSelectableNode(el)) {
+        return [{textContent: ' '}]
+      }
+
       return Array.from(el.childNodes).reduce(function (acc, childNode) {
-        if (childNode.nodeType !== 3) {
+        if (childNode.nodeType !== Node.TEXT_NODE) {
           return acc.concat(getTextNodes(childNode))
         }
 
@@ -96,20 +109,34 @@
     }
 
     function convertRangeToAbsoluteIndexes(rootEl, range) {
-      const start = getNodeOffset(rootEl, range.startContainer, range.startOffset)
-      const end = getNodeOffset(rootEl, range.endContainer, range.endOffset)
+      let startContainer = range.startContainer
+      let startOffset = range.startOffset
+      if (startContainer.nodeType !== Node.TEXT_NODE && startContainer === range.commonAncestorContainer) {
+        startContainer = startContainer.childNodes[startOffset]
+        startOffset = 0
+      }
+
+      let endContainer = range.endContainer
+      let endOffset = range.endOffset
+      if (endContainer.nodeType !== Node.TEXT_NODE && endContainer === range.commonAncestorContainer) {
+        endContainer = endContainer.childNodes[endOffset]
+        endOffset = 0
+      }
+
+      const start = getNodeOffset(rootEl, startContainer, startOffset)
+      const end = getNodeOffset(rootEl, endContainer, endOffset)
 
       return [start, end]
     }
 
 
-    let redrawTimeout = null
     let lastRange = null
     document.addEventListener('selectionchange', () => {
       const selection = document.getSelection()
 
       if (selection.type === 'Range') {
         const range = selection.getRangeAt(0)
+        console.log(range)
         if (lastRange !== range && !range.collapsed) {
           const [absRangeStart, absRangeEnd] = convertRangeToAbsoluteIndexes(contenteditable, range)
           console.log('Absolute Range', absRangeStart, absRangeEnd)
@@ -127,19 +154,25 @@
     function getNodeForIndex(rootEl, absoluteIndex) {
       let node = null
       let index = absoluteIndex
-
-      childNodes = Array.from(rootEl.childNodes)
+      let childNodes = Array.from(rootEl.childNodes)
 
       let childNode = null
       while (!node && childNodes.length > 0) {
         childNode = childNodes.shift()
-        if (childNode.nodeType === 3) {
+        if (childNode.nodeType === Node.TEXT_NODE) {
           let cleanedTextNodeLength = cleanTextNode(childNode).length
           index -= cleanedTextNodeLength
 
           if (index <= 0) {
             node = childNode
             index += cleanedTextNodeLength
+          }
+        } else if (isOrphanSelectableNode(childNode)) {
+          index -= 1
+
+          if (index <= 0) {
+            node = childNode
+            index = 0
           }
         } else {
           let nodeText = childNode.innerText
