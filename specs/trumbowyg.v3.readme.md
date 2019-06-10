@@ -15,7 +15,7 @@ Core
 - Keyboard shortcuts
 
 UI
-- Button Pane (relative, fixed, floatting)
+- Button Pane (relative, fixed, floating)
   - dropdown
   - button
 - Modals
