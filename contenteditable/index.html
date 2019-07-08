@@ -35,6 +35,7 @@
 <body>
   <div contenteditable="true">
     <div>
+      <h1>Trumbowyg v3</h1>
       <p>Lorem <del>ipsum <strong>d<em>o</em>lor</strong></del> <em>sit</em> amet.</p>
       <p>And <strong>blah <em>or</em></strong> nah.</p>
       <div>
@@ -51,6 +52,24 @@
           </ul>
         </li>
       </ul>
+      <table>
+        <thead>
+          <tr>
+            <th>Col 1</th>
+            <th>Col 2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Line 1-1</td>
+            <td>Line 1-2</td>
+          </tr>
+          <tr>
+            <td>Line 2-1</td>
+            <td>Line 2-2</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
   <div id="result"></div>
@@ -135,42 +154,40 @@
     }
 
     function convertRangeToAbsoluteIndexes(rootEl, range) {
-      const {
-        rangeContainer: startContainer,
-        rangeOffset: startOffset,
-        isRangeContainerIncluded: isStartContainerIncluded,
-      } = cleanRangeBoundary(range.startContainer, range.startOffset)
-
-      const {
-        rangeContainer: endContainer,
-        rangeOffset: endOffset,
-        isRangeContainerIncluded: isEndContainerIncluded,
-      } = cleanRangeBoundary(range.endContainer, range.endOffset)
-
-      const startIndex = getNodeOffset(rootEl, startContainer, startOffset, isStartContainerIncluded)
-      const endIndex = getNodeOffset(rootEl, endContainer, endOffset, isEndContainerIncluded)
+      const startIndex = convertRangeBoundaryToAbsoluteIndex(rootEl, range.startContainer, range.startOffset)
+      const endIndex = convertRangeBoundaryToAbsoluteIndex(rootEl, range.endContainer, range.endOffset)
 
       return [startIndex, endIndex]
     }
 
+    function convertRangeBoundaryToAbsoluteIndex(rootEl, rangeContainer, rangeOffset) {
+      const {
+        rangeContainer: startContainer,
+        rangeOffset: startOffset,
+        isRangeContainerIncluded: isStartContainerIncluded,
+      } = cleanRangeBoundary(rangeContainer, rangeOffset)
 
-    let lastRange = null
+      const index = getNodeOffset(rootEl, startContainer, startOffset, isStartContainerIncluded)
+
+      return index
+    }
+
+
     document.addEventListener('selectionchange', () => {
       const selection = document.getSelection()
 
+      const range = selection.getRangeAt(0)
+      console.log(range)
+
       if (selection.type === 'Range') {
-        const range = selection.getRangeAt(0)
-        console.log(range)
-        if (lastRange !== range && !range.collapsed) {
-          const [absRangeStart, absRangeEnd] = convertRangeToAbsoluteIndexes(contenteditable, range)
-          console.log('Absolute Range', absRangeStart, absRangeEnd)
+        const [absRangeStart, absRangeEnd] = convertRangeToAbsoluteIndexes(contenteditable, range)
+        console.log('Absolute Range indexes:', absRangeStart, absRangeEnd)
 
-          let textNodes = getTextNodes(contenteditable)
-          let cleanedTextNodesContent = textNodes.map(function (textNode) { return cleanTextNode(textNode) })
-          console.log('Selected text:', cleanedTextNodesContent.join('').substr(absRangeStart, absRangeEnd - absRangeStart))
-
-          lastRange = range
-        }
+        let textNodes = getTextNodes(contenteditable)
+        let cleanedTextNodesContent = textNodes.map(function (textNode) { return cleanTextNode(textNode) })
+        console.log('Selected text:', cleanedTextNodesContent.join('').substr(absRangeStart, absRangeEnd - absRangeStart))
+      } else if (selection.type === 'Caret') {
+        console.log('Absolute Caret index:', convertRangeBoundaryToAbsoluteIndex(contenteditable, range.startContainer, range.startOffset))
       }
     })
 
@@ -236,7 +253,7 @@
     contenteditable.innerHTML = ''
     contenteditable.innerHTML = oldHtml
 
-    // SET SELECTION 5, 16 (m ipsum dol)
+    // SET SELECTION 5, 16 => 'm ipsum dol'
     setSelection(5, 16)
   </script>
 </body>
