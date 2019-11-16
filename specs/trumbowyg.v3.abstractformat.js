@@ -1,27 +1,29 @@
 const content = [
-  {"string": "That's the title!", "attributes": {"header": 1}},
-  {"string": "Hello "},
-  {"string": "World ", "attributes": {"strong": true}},
-  {"string": "World ", "attributes": {"emphasis": true, "color": "#ffea00"}},
-  {"string": "Le monde ", "attributes": {"del": true, "background": "#ffea00"}},
-  {"string": "Le monde ", "attributes": {"del": true, "strong": true}},
-  {"string": "Le monde ", "attributes": {"del": true}},
-  {"string": "ceci est un lien ", "attributes": {"link": "https://alex-d.github.com/Trumbowyg", "title": "RTFM", "target": "blank"}},
-  {"string": "ceci est un lien ", "attributes": {"link": "https://alex-d.github.com/Trumbowyg"}},
-  {"string": "ceci est un lien", "attributes": {"link": "https://alex-d.github.com/Trumbowyg"}},
-  {"string": "first list", "attributes": {"list": "unordered"}},
-  {"string": "second item with sublist", "attributes": {"list": "unordered"}},
-  {"string": "first item in sublist", "attributes": {"list": "ordered", "indent": 1}},
+  { 'string': 'That\'s the title!', 'attributes': { 'header': 1 } },
+  { 'string': 'Hello ' },
+  { 'string': 'World ', 'attributes': { 'strong': true } },
+  { 'string': 'World ', 'attributes': { 'emphasis': true, 'color': '#ffea00' } },
+  { 'string': 'Le monde ', 'attributes': { 'del': true, 'background': '#ffea00' } },
+  { 'string': 'Le monde ', 'attributes': { 'del': true, 'strong': true } },
+  { 'string': 'Le monde ', 'attributes': { 'del': true } },
+  {
+    'string': 'ceci est un lien ',
+    'attributes': { 'link': 'https://alex-d.github.com/Trumbowyg', 'title': 'RTFM', 'target': 'blank' }
+  },
+  { 'string': 'ceci est un lien ', 'attributes': { 'link': 'https://alex-d.github.com/Trumbowyg' } },
+  { 'string': 'ceci est un lien', 'attributes': { 'link': 'https://alex-d.github.com/Trumbowyg' } },
+  { 'string': 'first list', 'attributes': { 'list': 'unordered' } },
+  { 'string': 'second item with sublist', 'attributes': { 'list': 'unordered' } },
+  { 'string': 'first item in sublist', 'attributes': { 'list': 'ordered', 'indent': 1 } },
 ]
-
 
 editor.setSelection(3, 8) // "'s th"
 editor.format('strong')
 
-content = [
-  {"string": "That", "attributes": {"header": 1}},
-  {"string": "'s th", "attributes": {"header": 1, "strong": true}},
-  {"string": "e title!", "attributes": {"header": 1}},
+const contentResult = [
+  { 'string': 'That', 'attributes': { 'header': 1 } },
+  { 'string': '\'s th', 'attributes': { 'header': 1, 'strong': true } },
+  { 'string': 'e title!', 'attributes': { 'header': 1 } },
   // ...
 ]
 
