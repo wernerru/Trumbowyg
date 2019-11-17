@@ -43,10 +43,9 @@ const output = parse(input)
 console.log(output)
 
 document.getElementById('output').innerHTML = JSON.stringify(output, null, 2)
-hljs.initHighlightingOnLoad()
+hljs.highlightBlock(document.querySelector('pre code'))
 
 document.getElementById('input').addEventListener('input', function () {
   document.getElementById('output').innerHTML = JSON.stringify(parse(this), null, 2)
-  hljs.initHighlighting.called = false
-  hljs.initHighlightingOnLoad()
+  hljs.highlightBlock(document.querySelector('pre code'))
 })
