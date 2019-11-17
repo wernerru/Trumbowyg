@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Trumbowyg v3 - Render</title>
+  <style>
+    body {
+      color: #fff;
+      background: #111;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      font-size: 16px;
+      font-family: sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .cols {
+      display: flex;
+      height: 100%;
+    }
+
+    .cols > * {
+      width: 50%;
+    }
+
+    pre {
+      margin: 0;
+    }
+
+    #input,
+    #output {
+      padding: 30px !important;
+      min-height: 100%;
+    }
+  </style>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/styles/a11y-dark.min.css">
+</head>
+<body>
+<div class="cols">
+  <div id="input" contenteditable="true">
+    <h1>Trumbowyg v3 <u>will be really great</u></h1>
+    <p>Lorem
+      <del>ipsum <strong>d<em>o</em>lor</strong></del>
+      <u><em>sit</em></u> amet
+    </p>
+    <p>And <strong>blah <em>or</em></strong> nah.</p>
+    <div>Salut<img src="/contenteditable/img.svg" alt="Some JavaScript logo" width="20px"></div>
+    <ul>
+      <li>Item 1</li>
+      <li>Second item</li>
+      <li>List in list
+        <ul>
+          <li>Third li</li>
+          <li>Fourth Item</li>
+        </ul>
+      </li>
+    </ul>
+    <table>
+      <tbody>
+      <tr>
+        <td>Col 1</td>
+        <td>Col 2</td>
+      </tr>
+      <tr>
+        <td>Line 1-1</td>
+        <td>Line 1-2</td>
+      </tr>
+      <tr>
+        <td>Line 2-1</td>
+        <td>Line 2-2</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <pre><code class="json" id="output"></code></pre>
+</div>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
+<script src="index.js"></script>
+</body>
+</html>

@@ -12,33 +12,40 @@
       font-size: 16px;
       font-family: sans-serif;
     }
+
     * {
       box-sizing: border-box;
     }
+
     .cols {
       display: flex;
       height: 100%;
     }
+
     .cols > * {
       width: 50%;
+      min-height: 100%;
     }
+
     pre {
       margin: 0;
     }
-    #output,
-    pre code {
+
+    #input,
+    #output {
       padding: 30px !important;
+      min-height: 100%;
     }
   </style>
   <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/styles/a11y-dark.min.css">
 </head>
 <body>
 <div class="cols">
-  <div id="output" contenteditable="true"></div>
   <pre><code class="json" id="input" contenteditable="true"></code></pre>
+  <div id="output"></div>
 </div>
 <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
+<script>hljs.initHighlightingOnLoad()</script>
 <script src="index.js"></script>
 </body>
 </html>
