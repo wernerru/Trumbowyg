@@ -174,8 +174,68 @@ const input = [
   },
 ]
 
-// https://github.com/ianstormtaylor/slate/blob/master/examples/markdown-shortcuts/value.json
+document.getElementById('input').innerHTML = JSON.stringify(input, null, 2)
 
-// https://github.com/andrejewski/himalaya#example-inputoutput
+const blockToTag = {
+  paragraph: 'p',
+  div: 'div',
+  ul: 'ul',
+  li: 'li',
+  table: 'table',
+  tableRow: 'tr',
+  tableCell: 'td',
+  strong: 'strong',
+  emphasis: 'em',
+  delete: 'del',
+  underline: 'u',
+}
 
-// https://github.com/syntax-tree/mdast
+function tagBlockRenderer(tagName, structNode) {
+  return '<' + tagName + '>' + render(structNode.children) + '</' + tagName + '>'
+}
+
+// Renderers
+const renderers = {
+  header: function (structNode) {
+    return tagBlockRenderer('h' + structNode.depth, structNode)
+  },
+  block: function (structNode) {
+    return tagBlockRenderer(blockToTag[structNode.type], structNode)
+  },
+  text: function (structNode) {
+    return structNode.value
+  },
+  image: function (structNode) {
+    const attributes = Object.keys(structNode.attributes).map((attribute) => [attribute, '"' + structNode.attributes[attribute] + '"'].join('=')).join(' ')
+
+    return `<img ${attributes}>`
+  },
+}
+
+function getRenderer(strucNode) {
+  if (!renderers.hasOwnProperty(strucNode.type) && !blockToTag.hasOwnProperty(strucNode.type)) {
+    console.warn('No renderer for strucNode', JSON.stringify(strucNode))
+  }
+
+  return renderers[strucNode.type] || renderers.block
+}
+
+function render(structNodes) {
+  return structNodes.map((structNode) => {
+    const renderer = getRenderer(structNode)
+    if (!renderer) {
+      return
+    }
+
+    return renderer(structNode)
+  }).join('')
+}
+
+const output = render(input)
+console.log(output)
+
+document.getElementById('output').innerHTML = output
+
+document.getElementById('input').addEventListener('input', function () {
+  document.getElementById('output').innerHTML = render(JSON.parse(this.innerText))
+})
