@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"module": "es6",
+		"target": "es6",
+		"moduleResolution": "node",
+		"experimentalDecorators": true,
+		"importHelpers": true,
+		"baseUrl": ".",
+		"paths": {
+			"@/src/*": [
+				"src/*"
+			]
+		}
+	},
+	"include": [
+		"**/src/**/*.ts"
+	],
+	"exclude": [
+		"node_modules"
+	]
+}

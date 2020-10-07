@@ -1,10 +1,11 @@
 # Trumbowyg v3 draft
 
+AST = Abstract Syntax Tree
 
 0. UI click button
 1. Core
    - Save selection (2-7)
-   - call button action : edit AST
+   - call module action : edit AST
 2. AST watch
    - render
    - update ContentEditable
@@ -109,7 +110,7 @@ document.querySelectorAll('.editor').forEach((editor) => new Trumbowyg(editor))
 
 import Trumbowyg from 'trumbowyg'
 import {DEFAULT_MODULES} from 'trumbowyg/presets/modules'
-import CleanPaste from 'trumbowyg/plugins/CleanPaste'
+import CleanPaste from 'trumbowyg/modules/CleanPaste'
 import {
   ItalicButton,
   StrongButton,
@@ -132,7 +133,7 @@ new Trumbowyg('#editor', {
 
 import Trumbowyg from 'trumbowyg'
 import {DEFAULT_MARKDOWN_MODULES} from 'trumbowyg/presets/modules'
-import CleanPaste from 'trumbowyg/plugins/CleanPaste'
+import CleanPaste from 'trumbowyg/modules/CleanPaste'
 import {
   ItalicButton,
   StrongButton,
