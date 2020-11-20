@@ -347,6 +347,7 @@
     right: 0;
     text-decoration: none;
     color: #FFF;
+    opacity: 1 !important;
     display: block;
     width: 100px;
     height: 35px;
